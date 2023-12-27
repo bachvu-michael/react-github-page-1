@@ -1,4 +1,6 @@
 [https://bachvu-michael.github.io/react-github-page-1/](https://bachvu-michael.github.io/react-github-page-1/)
+npm run deploy
+npm run deploy -- -m "Deploy React app to GitHub Pages"
 
 # Getting Started with Create React App
 
