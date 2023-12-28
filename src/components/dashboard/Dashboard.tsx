@@ -21,6 +21,8 @@ import { mainListItems, secondaryListItems } from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
+import { useQuery } from 'react-query';
+import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 
 function Copyright(props: any) {
   return (
@@ -85,14 +87,97 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
+
+
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function Dashboard() {
   const [open, setOpen] = React.useState(true);
+  const [rows, setRows] = React.useState([]);
+
+  const fetchData = async () => {
+    const url = 'https://bachvu.io.vn/api/api/v1/advertisers/?maxRows=0&startRow=1';
+    const headers = new Headers({
+      'Accept': 'application/json'
+    });
+    const response = await fetch(url, {
+      method: 'GET',
+      headers:headers
+    });
+    return response.json();
+  };
+
+  const convertKeysToLowerCase:any = (obj:any) => {
+    if (!obj || typeof obj !== 'object') {
+      return obj;
+    }
+  
+    if (Array.isArray(obj)) {
+      return obj.map(item => convertKeysToLowerCase(item));
+    }
+  
+    return Object.keys(obj).reduce((acc:any, key) => {
+      const newKey = key.toLowerCase();
+      acc[newKey] = convertKeysToLowerCase(obj[key]);
+      return acc;
+    }, {});
+  }
+
+  const { data, error, isLoading } = useQuery('data', fetchData);
+
+  const columns: GridColDef[] = [
+    {
+      field: 'first_name',
+      headerName: 'First name',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'last_name',
+      headerName: 'Last name',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'url',
+      headerName: 'URL',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'category',
+      headerName: 'Category',
+      width: 150,
+      editable: true,
+    },
+    {
+      field: 'datecreated',
+      headerName: 'Date created',
+      width: 150,
+      editable: true,
+    },
+  ];
+  
+  React.useEffect(() => {
+    if (data) {
+      setRows(convertKeysToLowerCase(data));
+    }
+  }, [data]);
+
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  // const getRowId = (data:any) => data.id;
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: query false</div>;
+  }
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -197,6 +282,25 @@ export default function Dashboard() {
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                   <Orders />
+                </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                  <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    initialState={{
+                      pagination: {
+                        paginationModel: {
+                          pageSize: 5,
+                        },
+                      },
+                    }}
+                    pageSizeOptions={[5]}
+                    // getRowId={getRowId}
+                    checkboxSelection
+                    disableRowSelectionOnClick
+                  />
                 </Paper>
               </Grid>
             </Grid>
