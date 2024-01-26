@@ -33,7 +33,7 @@ export const router = createBrowserRouter([
               ],
             },
             {
-              path: "QR",
+              path: "qr",
               Component: QR,
             }
             // {

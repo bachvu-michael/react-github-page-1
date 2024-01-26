@@ -180,7 +180,7 @@ export default function Layout() {
                             </ListItemIcon>
                             <ListItemText primary="Advertisers" />
                         </ListItemButton>
-                        <ListItemButton component="a" href="/react-github-page-1/QR">
+                        <ListItemButton component="a" href="/react-github-page-1/qr">
                             <ListItemIcon>
                                 <ShoppingCartIcon />
                             </ListItemIcon>
