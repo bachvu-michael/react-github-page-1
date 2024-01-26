@@ -16,7 +16,7 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 // loader: homeLoader,
-                Component: Dashboard,
+                Component: QR,
             },
             {
               path: "advertisers",
@@ -34,7 +34,7 @@ export const router = createBrowserRouter([
             },
             {
               path: "qr",
-              Component: QR,
+              Component: Dashboard,
             }
             // {
             //   path: "deferred",
